@@ -1,0 +1,141 @@
+{
+    "variables": {
+        "playbook": "igo",
+        "isotime_reference" : "2006-01-02 15-04-05",
+        "ami_name": "iGO_2019_base",
+        "account_ids": "",
+        "aws_access_key_id": "{{ env `AWS_ACCESS_KEY_ID` }}",
+		"aws_secret_access_key": "{{ env `AWS_SECRET_ACCESS_KEY` }}",
+        "ansible_password": "LMnp7ZYE<F6!whmK",
+        "vpc": "{{env `BUILD_VPC_ID`}}",
+        "subnet": "{{env `BUILD_SUBNET_ID`}}",
+        "aws_region": "{{env `AWS_REGION`}}",
+        "security_group": "{{env `BUILD_SECGRP_ID`}}",
+        "git_hash": ""
+    },
+    "builders": [
+        {
+            "vpc_id": "{{user `vpc`}}",
+            "access_key": "{{ user `aws_access_key_id` }}",
+		    "secret_key": "{{ user `aws_secret_access_key` }}",
+            "subnet_id": "{{user `subnet`}}",
+            "type": "amazon-ebs",
+            "region": "us-east-1",
+            "instance_type": "t3.medium",
+            "profile": "{{ user `aws_profile`}}",
+            "ami_users": "{{ user `account_ids`}}",
+            "ami_name": "{{ user `ami_name` }} {{isotime (user `isotime_reference`) | clean_resource_name}}",
+            "ami_description": "ami build for {{ user `ami_name` }} on {{isotime (user `isotime_reference`) }}",
+            "user_data_file": "./scripts/ConfigureSSH.ps1",
+            "associate_public_ip_address": false,
+            "communicator": "ssh",
+		    "ssh_timeout": "60m",
+		    "ssh_username": "Administrator",
+            "source_ami_filter": {
+                "filters": {
+                    "virtualization-type": "hvm",
+                    "name": "*CCOE_Windows2019*",
+                    "root-device-type": "ebs"
+                },
+                "owners": ["635846081843"],
+                "most_recent": true
+            },
+            "launch_block_device_mappings": [
+                {
+                    "device_name": "/dev/sda1",
+                    "volume_size": "50",
+                    "volume_type": "gp2",
+                    "delete_on_termination": true
+                },
+                {
+                    "device_name": "/dev/xvdb",
+                    "volume_size": "50",
+                    "volume_type": "gp2",
+                    "delete_on_termination": true
+                }
+            ],
+            "security_group_id": "{{ user `security_group`}}",
+            "tags": {
+                "Name": "{{ user `ami_name`}} {{isotime (user `isotime_reference`) }}",
+                "Environment": "{{ user `environment`}}",
+                "GIT_HASH": "{{user `git_hash`}}"
+            }
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "powershell",
+            "inline": [
+                "Get-Disk | Where partitionstyle -eq 'raw' | Initialize-Disk -PartitionStyle MBR -PassThru | New-Partition -AssignDriveLetter -UseMaximumSize | Format-Volume -FileSystem NTFS -NewFileSystemLabel \"disk2\" -Confirm:$false"
+            ]
+        },
+        {
+            "type": "powershell",
+            "inline": [
+                "New-Item -Path C:\\bootstrap -ItemType directory"
+            ]
+        },
+        {
+            "type": "file",
+            "source": "../imagepipeline/scripts",
+            "destination": "C:\\bootstrap"
+        },
+        {
+            "type": "powershell",
+            "scripts": [
+                "../imagepipeline/scripts/CreateServerAdminUser.ps1"
+            ]
+        },
+        {
+            "type": "powershell",
+            "scripts": [
+                "../imagepipeline/scripts/ConfigureRemotingForAnsible.ps1"
+            ]
+        },
+        {
+            "type": "powershell",
+            "scripts": [
+                "../imagepipeline/scripts/SetDriveLetterMapping.ps1"
+            ]
+        },
+        {
+            "type": "powershell",
+            "inline": [
+              "switch -Wildcard ($env:PACKER_BUILDER_TYPE) {",
+              "  \"amazon*\" { $publicipv4 = Invoke-RestMethod -Method GET -Uri http://169.254.169.254/latest/meta-data/local-ipv4 }",
+              "  Default { Throw \"Unknown PACKER_BUILDER_TYPE\" } }",
+              "\"[{{build_name}}]\" | Out-File C:\\Windows\\Temp\\host -encoding ascii",
+              "$publicipv4 | Out-File C:\\Windows\\Temp\\host -encoding ascii"
+              ]
+          },
+          {
+            "type": "file",
+            "direction": "download",
+            "source": "C:\\Windows\\Temp\\host",
+            "destination": "playbook/{{build_name}}-host"
+          },
+		{
+            "type": "ansible",
+             "playbook_file": "ansible/playbooks/{{user `playbook`}}.yml",
+			  "ansible_env_vars": [ "ANSIBLE_HOST_KEY_CHECKING=False" ],
+			  "inventory_file": "playbook/{{build_name}}-host",
+			  "extra_arguments": [ "--extra-vars", "ANSIBLE_CONFIG=ansible/Aansible.cfg ANSIBLE_HOST_KEY_CHECKING=False ANSIBLE_ROLES_PATH=ansible/roles ansible_user=serveradmin ansible_password='{{user `ansible_password`}}' ansible_become_pass='{{user `ansible_password`}}' ansible_winrm_scheme=https ansible_connection=winrm ansible_winrm_server_cert_validation=ignore" ]
+        },
+        {
+            "type": "powershell",
+            "inline": [
+                "C:\\ProgramData\\Amazon\\EC2-Windows\\Launch\\Scripts\\SendWindowsIsReady.ps1 -Schedule",
+                "C:\\ProgramData\\Amazon\\EC2-Windows\\Launch\\Scripts\\InitializeDisks.ps1 -Schedule",
+                "C:\\ProgramData\\Amazon\\EC2-Windows\\Launch\\Scripts\\InitializeInstance.ps1 -Schedule",
+                "C:\\ProgramData\\Amazon\\EC2-Windows\\Launch\\Scripts\\SysprepInstance.ps1 -NoShutdown"
+            ],
+            "elevated_user": "Administrator",
+            "elevated_password": "{{.WinRMPassword}}"
+        }
+    ],
+    "post-processors": [
+        {
+            "type": "manifest"
+        }
+    ]
+}
