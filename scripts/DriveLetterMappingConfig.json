@@ -1,0 +1,8 @@
+{
+  "driveLetterMapping": [
+    {
+      "volumeName": "data",
+      "driveLetter": "H"
+    }
+  ]
+}
