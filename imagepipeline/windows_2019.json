@@ -4,8 +4,6 @@
         "isotime_reference" : "2006-01-02 15-04-05",
         "ami_name": "iGO_2019_base",
         "account_ids": "",
-        "aws_access_key_id": "{{ env `AWS_ACCESS_KEY_ID` }}",
-		"aws_secret_access_key": "{{ env `AWS_SECRET_ACCESS_KEY` }}",
         "ansible_password": "LMnp7ZYE<F6!whmK",
         "vpc": "{{env `BUILD_VPC_ID`}}",
         "subnet": "{{env `BUILD_SUBNET_ID`}}",
@@ -28,9 +26,6 @@
             "ami_description": "ami build for {{ user `ami_name` }} on {{isotime (user `isotime_reference`) }}",
             "user_data_file": "./scripts/ConfigureSSH.ps1",
             "associate_public_ip_address": false,
-            "communicator": "ssh",
-		    "ssh_timeout": "60m",
-		    "ssh_username": "Administrator",
             "source_ami_filter": {
                 "filters": {
                     "virtualization-type": "hvm",
