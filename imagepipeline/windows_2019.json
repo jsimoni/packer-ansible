@@ -54,7 +54,13 @@
                 "Name": "{{ user `ami_name`}} {{isotime (user `isotime_reference`) }}",
                 "Environment": "{{ user `environment`}}",
                 "GIT_HASH": "{{user `git_hash`}}"
-            }
+            },
+    	    "communicator": "winrm",
+            "winrm_username": "Administrator",
+            "winrm_port": 5986,
+            "winrm_timeout": "15m",
+            "winrm_use_ssl": true,
+            "winrm_insecure": true		
         }
     ],
     "provisioners": [
