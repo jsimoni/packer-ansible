@@ -1,0 +1,24 @@
+---
+
+- hosts: all
+  gather_facts: no
+
+  # windows specific vmware deployment variables, to override the defaults of our linux environment
+  vars:
+    windows_host: true
+    ansible_user: 'administrator'
+    ansible_password: ''
+    ansible_winrm_transport: basic
+    ansible_winrm_server_cert_validation: ignore
+    ansible_port: 5986
+    ansible_winrm_scheme: https
+    ansible_connection: winrm
+    ansible_ssh_pipelining: no
+    ansible_pipelining: no
+
+  tasks:
+
+    - import_role:
+        name: igo
+
+...

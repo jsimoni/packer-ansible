@@ -1,0 +1,43 @@
+---
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo "Installing additional YUM & Python and other preq packages..."
+      - yum -y update && yum -y install unzip curl python3-pip
+      - pip3 install awscli
+      - pip3 install 'ansible==2.7.10'
+      - pip3 install pywinrm
+      - echo "Installing Packer..."
+      - cd $CODEBUILD_SRC_DIR 
+      - ls -a
+      - cd /usr/local/bin/ && curl -qL -o packer.zip https://releases.hashicorp.com/packer/1.5.5/packer_1.5.5_linux_amd64.zip && unzip packer.zip
+      - cd $CODEBUILD_SRC_DIR/imagepipeline && packer version
+      - ls -a
+      - ansible --version
+      - echo "Validating packer JSON"
+      - packer validate windows_2019.json
+      - echo $HOME
+  build:
+    commands:
+      - echo "Build Phase"
+      - cd $CODEBUILD_SRC_DIR/imagepipeline
+      - ls -a
+      - packer build -var git_hash=${CODEBUILD_RESOLVED_SOURCE_VERSION} -on-error=abort -color=false windows_2019.json | tee build.log
+  install:
+    runtime-versions:
+      docker: 18
+    commands:
+      - echo "Install Phase"
+  post_build:
+    commands:
+      - egrep "${AWS_REGION}\:\sami\-" build.log | cut -d' ' -f2 > ami_id.txt
+      # Packer doesn't return non-zero status; we must do that if Packer build failed
+      - test -s ami_id.txt || exit 1
+      - echo "build completed on `date`"
+      - echo "Packer build done"
+artifacts:
+  files:
+    - build.log
+  discard-paths: yes
