@@ -22,7 +22,7 @@
             "ami_name": "{{ user `ami_name` }} {{isotime (user `isotime_reference`) | clean_resource_name}}",
             "ami_description": "ami build for {{ user `ami_name` }} on {{isotime (user `isotime_reference`) }}",
             "user_data_file":"./ec2-userdata.ps1",
-            "associate_public_ip_address": true,
+            "associate_public_ip_address": false,
             "source_ami_filter": {
                 "filters": {
                     "virtualization-type": "hvm",
