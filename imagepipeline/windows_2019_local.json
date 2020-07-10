@@ -17,7 +17,6 @@
             "type": "amazon-ebs",
             "region": "us-east-1",
             "instance_type": "t3.medium",
-            "profile": "{{ user `aws_profile`}}",
             "ami_users": "{{ user `account_ids`}}",
             "ami_name": "{{ user `ami_name` }} {{isotime (user `isotime_reference`) | clean_resource_name}}",
             "ami_description": "ami build for {{ user `ami_name` }} on {{isotime (user `isotime_reference`) }}",
