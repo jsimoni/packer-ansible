@@ -1,0 +1,74 @@
+{
+    "variables": {
+        "playbook": "igo",
+        "isotime_reference" : "2006-01-02 15-04-05",
+        "ami_name": "iGO_2019_base",
+        "account_ids": "",
+        "vpc": "{{env `BUILD_VPC_ID`}}",
+        "subnet": "{{env `BUILD_SUBNET_ID`}}",
+        "aws_region": "{{env `AWS_REGION`}}",
+        "security_group": "{{env `BUILD_SECGRP_ID`}}",
+        "git_hash": ""
+    },
+    "builders": [
+        {
+            "vpc_id": "{{user `vpc`}}",
+            "subnet_id": "{{user `subnet`}}",
+            "type": "amazon-ebs",
+            "region": "us-east-1",
+            "instance_type": "t3.medium",
+            "profile": "{{ user `aws_profile`}}",
+            "ami_users": "{{ user `account_ids`}}",
+            "ami_name": "{{ user `ami_name` }} {{isotime (user `isotime_reference`) | clean_resource_name}}",
+            "ami_description": "ami build for {{ user `ami_name` }} on {{isotime (user `isotime_reference`) }}",
+            "user_data_file":"./ec2-userdata.ps1",
+            "associate_public_ip_address": true,
+            "source_ami_filter": {
+                "filters": {
+                    "virtualization-type": "hvm",
+                    "name": "*CCOE_Windows2019*",
+                    "root-device-type": "ebs"
+                },
+                "owners": ["635846081843"],
+                "most_recent": true
+            },
+            "security_group_id": "{{ user `security_group`}}",
+            "tags": {
+                "Name": "{{ user `ami_name`}} {{isotime (user `isotime_reference`) }}",
+                "Environment": "{{ user `environment`}}",
+                "GIT_HASH": "{{user `git_hash`}}"
+            },
+    	      "communicator": "winrm",
+            "winrm_username": "Administrator",
+            "winrm_port": 5986,
+            "winrm_timeout": "5m",
+            "winrm_use_ssl": true,
+            "winrm_insecure": true
+        }
+    ],
+    "provisioners": [
+        {
+         "type": "ansible",
+         "playbook_file": "ansible/playbooks/igo.yml",
+         "use_proxy": false,
+         "user": "Administrator",
+         "extra_arguments": ["-e", "ansible_winrm_server_cert_validation=ignore"]
+        },
+        {
+            "type": "powershell",
+            "inline": [
+                "C:\\ProgramData\\Amazon\\EC2-Windows\\Launch\\Scripts\\SendWindowsIsReady.ps1 -Schedule",
+                "C:\\ProgramData\\Amazon\\EC2-Windows\\Launch\\Scripts\\InitializeDisks.ps1 -Schedule",
+                "C:\\ProgramData\\Amazon\\EC2-Windows\\Launch\\Scripts\\InitializeInstance.ps1 -Schedule",
+                "C:\\ProgramData\\Amazon\\EC2-Windows\\Launch\\Scripts\\SysprepInstance.ps1 -NoShutdown"
+            ],
+            "elevated_user": "Administrator",
+            "elevated_password": "{{.WinRMPassword}}"
+        }
+    ],
+    "post-processors": [
+        {
+            "type": "manifest"
+        }
+    ]
+}

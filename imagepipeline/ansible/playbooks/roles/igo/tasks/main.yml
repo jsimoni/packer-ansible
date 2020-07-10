@@ -1,5 +1,3 @@
----
-
 - name: 'create test directory structure'
   win_file:
     path: 'C:\temp\ansible\data'
@@ -9,5 +7,4 @@
   win_file:
     path: 'C:\temp\ansible\data\empty.txt'
     state: touch
-
-...
+    
