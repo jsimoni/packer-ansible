@@ -61,10 +61,5 @@
             "elevated_user": "Administrator",
             "elevated_password": "{{.WinRMPassword}}"
         }
-    ],
-    "post-processors": [
-        {
-            "type": "manifest"
-        }
     ]
 }
