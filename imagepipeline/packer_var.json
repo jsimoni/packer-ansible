@@ -2,5 +2,6 @@
   "vpc": "vpc-06df700034aa58aa9",
   "subnet": "subnet-0789e25fb2818c43c",
   "aws_region": "us-east-1",
-  "security_group": "sg-0cd1d6d1c223a14a9"
+  "security_group": "sg-0cd1d6d1c223a14a9",
+  "public_ip": "true"
 }
