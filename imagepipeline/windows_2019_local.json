@@ -43,7 +43,8 @@
          "playbook_file": "ansible/playbooks/igo.yml",
          "use_proxy": false,
          "user": "Administrator",
-         "extra_arguments": ["-e", "ansible_winrm_server_cert_validation=ignore"]
+         "extra_arguments": ["-e", "ansible_winrm_server_cert_validation=ignore"],
+         "extra_arguments": ["-vvv"]
         },
         {
             "type": "powershell",
