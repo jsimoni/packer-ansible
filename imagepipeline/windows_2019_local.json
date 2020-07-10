@@ -21,7 +21,7 @@
             "ami_name": "{{ user `ami_name` }} {{isotime (user `isotime_reference`) | clean_resource_name}}",
             "ami_description": "ami build for {{ user `ami_name` }} on {{isotime (user `isotime_reference`) }}",
             "user_data_file":"./ec2-userdata.ps1",
-            "associate_public_ip_address": false,
+            "associate_public_ip_address": true,
             "source_ami": "ami-05bb2dae0b1de90b3",
             "security_group_id": "{{ user `security_group`}}",
             "tags": {
