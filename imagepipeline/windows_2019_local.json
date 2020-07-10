@@ -17,7 +17,7 @@
             "subnet_id": "{{user `subnet`}}",
             "type": "amazon-ebs",
             "region": "us-east-1",
-            "instance_type": "t3.medium",
+            "instance_type": "t3.micro",
             "ami_users": "{{ user `account_ids`}}",
             "ami_name": "{{ user `ami_name` }} {{isotime (user `isotime_reference`) | clean_resource_name}}",
             "ami_description": "ami build for {{ user `ami_name` }} on {{isotime (user `isotime_reference`) }}",
