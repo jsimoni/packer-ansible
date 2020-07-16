@@ -60,7 +60,7 @@
          "playbook_file": "simple_playbook.yaml",
          "use_proxy": false,
          "user": "Administrator",
-         "extra_arguments": ["-e", "ansible_connection=psrp ansible_psrp_auth=ntlm ansible_psrp_cert_validation=ignore ansible_port=5986 ansible_psrp_message_encryption=auto ansible_shell_type=powershell", "-vvvv"]
+         "extra_arguments": ["-e", "ansible_connection=psrp ansible_psrp_auth=ntlm ansible_psrp_cert_validation=ignore"]
         },
         {
             "type": "powershell",
