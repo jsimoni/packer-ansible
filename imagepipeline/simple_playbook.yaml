@@ -4,7 +4,7 @@
   gather_facts: no
   tasks:
   - name: Example from an Ansible Playbook
-    win_ping
+    win_ping:
 
 #  - name: 'create test directory structure'
 #    win_file:
