@@ -3,12 +3,15 @@
 - hosts: all
   gather_facts: no
   tasks:
-  - name: 'create test directory structure'
-    win_file:
-      path: 'C:\temp\ansible\data'
-      state: directory
+  - name: Example from an Ansible Playbook
+    win_ping
 
-  - name: 'create empty file'
-    win_file:
-      path: 'C:\temp\ansible\data\empty.txt'
-      state: touch
+#  - name: 'create test directory structure'
+#    win_file:
+#      path: 'C:\temp\ansible\data'
+#      state: directory
+
+#  - name: 'create empty file'
+#    win_file:
+#      path: 'C:\temp\ansible\data\empty.txt'
+#      state: touch

@@ -60,7 +60,7 @@
          "playbook_file": "simple_playbook.yaml",
          "use_proxy": false,
          "user": "Administrator",
-         "extra_arguments": ["-e", "ansible_winrm_server_cert_validation=ignore ansible_winrm_transport=ntlm ansible_winrm_operation_timeout_sec=60 ansible_winrm_read_timeout_sec=70 ansible_port=5986 ansible_winrm_message_encryption=auto ansible_shell_type=powershell", "-vvvv"]
+         "extra_arguments": ["-e", "ansible_winrm_server_cert_validation=ignore ansible_winrm_transport=ntlm ansible_winrm_operation_timeout_sec=200 ansible_winrm_read_timeout_sec=250 ansible_port=5986 ansible_winrm_message_encryption=auto ansible_shell_type=powershell", "-vvvv"]
         },
         {
             "type": "powershell",
