@@ -21,7 +21,7 @@
             "ami_users": "{{ user `account_ids`}}",
             "ami_name": "{{ user `ami_name` }} {{isotime (user `isotime_reference`) | clean_resource_name}}",
             "ami_description": "ami build for {{ user `ami_name` }} on {{isotime (user `isotime_reference`) }}",
-            "user_data_file":"./ec2-userdata2.ps1",
+            "user_data_file":"./ec2-userdata.ps1",
             "associate_public_ip_address": "{{ user `public_ip`}}",
             "source_ami_filter": {
                 "filters": {
@@ -44,7 +44,7 @@
     	      "communicator": "winrm",
             "winrm_username": "Administrator",
             "winrm_port": 5986,
-            "winrm_timeout": "5m",
+            "winrm_timeout": "2m",
             "winrm_use_ssl": true,
             "winrm_insecure": true,
             "winrm_use_ntlm": true
@@ -60,7 +60,7 @@
          "playbook_file": "simple_playbook.yaml",
          "use_proxy": false,
          "user": "Administrator",
-         "extra_arguments": ["-e", "ansible_winrm_server_cert_validation=ignore", "-vvv"]
+         "extra_arguments": ["-e", "ansible_winrm_server_cert_validation=ignore ansible_winrm_transport=ntlm"]
         },
         {
             "type": "powershell",
