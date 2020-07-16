@@ -2,6 +2,9 @@
 
 Set-ExecutionPolicy Unrestricted -Scope LocalMachine -Force -ErrorAction Ignore
 
+Invoke-WebRequest -Uri "https://github.com/PowerShell/PowerShell/releases/download/v7.0.2/PowerShell-7.0.2-win-x64.msi" -OutFile "C:\temp\PowerShell-7.0.2-win-x64.msi"
+msiexec.exe /package C:\temp\PowerShell-7.0.2-win-x64.msi /quiet ADD_EXPLORER_CONTEXT_MENU_OPENPOWERSHELL=1 REGISTER_MANIFEST=1
+
 # First, make sure WinRM can't be connected to
 netsh advfirewall firewall set rule name="Windows Remote Management (HTTP-In)" new enable=yes action=block
 
