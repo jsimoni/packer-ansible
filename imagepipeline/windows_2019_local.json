@@ -46,28 +46,11 @@
             "winrm_port": 5986,
             "winrm_timeout": "5m",
             "winrm_use_ssl": true,
-            "winrm_insecure": true
+            "winrm_insecure": true,
+            "winrm_use_ntlm": true
         }
     ],
     "provisioners": [
-        {
-          "type": "file",
-          "source": "LGPO.zip",
-          "destination": "c:\\temp\\lgpo.zip"
-        },
-        {
-            "type": "powershell",
-            "inline": ["Expand-Archive -LiteralPath c:\\temp\\lgpo.zip -DestinationPath c:\\temp\\lgpo"]
-        },
-        {
-          "type": "file",
-          "source": "enable_winrm_basic_auth.pol",
-          "destination": "c:\\temp\\lgpo\\enable_winrm_basic_auth.pol"
-        },
-        {
-            "type": "windows-shell",
-            "inline": ["c:\\temp\\lgpo\\LGPO.exe /m c:\\temp\\lgpo\\enable_winrm_basic_auth.pol"]
-        },
         {
             "type": "powershell",
             "script": "init.ps1"
