@@ -60,7 +60,7 @@
          "playbook_file": "simple_playbook.yaml",
          "use_proxy": false,
          "user": "Administrator",
-         "extra_arguments": ["-e", "ansible_winrm_server_cert_validation=ignore ansible_winrm_transport=ntlm"]
+         "extra_arguments": ["-e", "ansible_winrm_server_cert_validation=ignore ansible_winrm_transport=ntlm -vvvv"]
         },
         {
             "type": "powershell",
