@@ -2,7 +2,7 @@
     "variables": {
         "playbook": "igo",
         "isotime_reference" : "2006-01-02 15-04-05",
-        "ami_name": "{{env ami_name}}",
+        "ami_name": "{{env `BUILD_AMI_NAME`}}",
         "account_ids": "",
         "vpc": "{{env `BUILD_VPC_ID`}}",
         "subnet": "{{env `BUILD_SUBNET_ID`}}",
@@ -10,7 +10,7 @@
         "security_group": "{{env `BUILD_SECGRP_ID`}}",
         "git_hash": "",
         "public_ip": "{{env `BUILD_PUBLIC_IP`}}",
-        "aws_ami_owner_account_id": "{{env aws_ami_owner_account_id}}"
+        "aws_ami_owner_account_id": "{{env `BUILD_AMI_OWNER_ACCOUNT_ID`}}"
     },
     "builders": [
         {
