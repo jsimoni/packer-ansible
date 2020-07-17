@@ -3,5 +3,6 @@
   "subnet": "subnet-0789e25fb2818c43c",
   "aws_region": "us-east-1",
   "security_group": "sg-057598d3432f52f09",
-  "public_ip": "true"
+  "public_ip": "true",
+  "aws_ami_owner_account_id": "635846081843"
 }

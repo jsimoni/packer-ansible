@@ -2,14 +2,15 @@
     "variables": {
         "playbook": "igo",
         "isotime_reference" : "2006-01-02 15-04-05",
-        "ami_name": "iGO_2019_base",
+        "ami_name": "{{env ami_name}}",
         "account_ids": "",
         "vpc": "{{env `BUILD_VPC_ID`}}",
         "subnet": "{{env `BUILD_SUBNET_ID`}}",
         "aws_region": "{{env `AWS_REGION`}}",
         "security_group": "{{env `BUILD_SECGRP_ID`}}",
         "git_hash": "",
-        "public_ip": "{{env `BUILD_PUBLIC_IP`}}"
+        "public_ip": "{{env `BUILD_PUBLIC_IP`}}",
+        "aws_ami_owner_account_id": "{{env aws_ami_owner_account_id}}"
     },
     "builders": [
         {
@@ -29,7 +30,7 @@
                     "name": "*CCOE_Windows2019*",
                     "root-device-type": "ebs"
                 },
-                "owners": ["635846081843"],
+                "owners": ["{{ user `aws_ami_owner_account_id`}}"],
                 "most_recent": true
             },
             "security_group_id": "{{ user `security_group`}}",
@@ -39,7 +40,7 @@
                 "GIT_HASH": "{{user `git_hash`}}"
             },
             "run_tags": {
-                "Name": "Not Ryan"
+                "Name": "Building AMI with Packer Ansible over WinRM using the psrp library"
             },
     	      "communicator": "winrm",
             "winrm_username": "Administrator",
