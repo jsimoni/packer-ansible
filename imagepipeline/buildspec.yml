@@ -2,20 +2,31 @@
 version: 0.2
 
 phases:
+  install:
+    runtime-versions:
+      docker: 18
+    commands:
+      - echo "Install Phase"
   pre_build:
     commands:
-      - echo "Installing additional YUM & Python and other preq packages..."
-      - yum -y update && yum -y install unzip curl python3-pip
-      - pip3 install awscli
-      - pip3 install 'ansible==2.7.10'
-      - pip3 install pywinrm
+      #for amazon linux:
+      #- yum -y install unzip curl python3-pip
+      #- apk add unzip curl
+      #- curl -O https://bootstrap.pypa.io/get-pip.py \ python3 get-pip.py
+      #- pip3 install awscli
+      #- pip3 install 'ansible==2.7.10'
+      - pip3 install ansible
+      #- pip3 install pywinrm
+      - pip3 install pypsrp
       - echo "Installing Packer..."
-      - cd $CODEBUILD_SRC_DIR 
-      - ls -a
-      - cd /usr/local/bin/ && curl -qL -o packer.zip https://releases.hashicorp.com/packer/1.5.5/packer_1.5.5_linux_amd64.zip && unzip packer.zip
-      - cd $CODEBUILD_SRC_DIR/imagepipeline && packer version
-      - ls -a
-      - ansible --version
+      #- pwsh
+      #- rm /usr/bin/pwsh
+      #- pwsh
+      - cd $CODEBUILD_SRC_DIR
+      - cd /usr/local/bin/ && curl -qL -o packer.zip https://releases.hashicorp.com/packer/1.6.0/packer_1.6.0_linux_amd64.zip && unzip packer.zip
+      - cd $CODEBUILD_SRC_DIR/imagepipeline
+      #- packer version
+      #- ansible --version
       - echo "Validating packer JSON"
       - packer validate windows_2019.json
       - echo $HOME
@@ -23,20 +34,9 @@ phases:
     commands:
       - echo "Build Phase"
       - cd $CODEBUILD_SRC_DIR/imagepipeline
-      - ls -a
-      - packer build -var git_hash=${CODEBUILD_RESOLVED_SOURCE_VERSION} -on-error=abort -color=false windows_2019.json | tee build.log
-  install:
-    runtime-versions:
-      docker: 18
-    commands:
-      - echo "Install Phase"
-  post_build:
-    commands:
-      - egrep "${AWS_REGION}\:\sami\-" build.log | cut -d' ' -f2 > ami_id.txt
-      # Packer doesn't return non-zero status; we must do that if Packer build failed
-      - test -s ami_id.txt || exit 1
-      - echo "build completed on `date`"
-      - echo "Packer build done"
+      #- PACKER_DEBUG=1
+      - packer build -color=false windows_2019.json
+
 artifacts:
   files:
     - build.log
