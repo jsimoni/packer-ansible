@@ -4,5 +4,6 @@
   "aws_region": "us-east-1",
   "security_group": "sg-057598d3432f52f09",
   "public_ip": "true",
-  "aws_ami_owner_account_id": "635846081843"
+  "aws_ami_owner_account_id": "635846081843",
+  "ami_name": "iGO_2019_base"
 }
