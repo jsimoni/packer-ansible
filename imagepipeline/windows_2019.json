@@ -72,10 +72,6 @@
             ],
             "elevated_user": "Administrator",
             "elevated_password": "{{.WinRMPassword}}"
-        },
-        {
-            "type": "windows-shell",
-            "inline": ["xcopy C:\\ProgramData\\Amazon\\EC2-Windows\\Launch\\Log\\. c:\\temp\\log\\"]
         }
     ]
 }
