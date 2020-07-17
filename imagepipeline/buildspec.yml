@@ -9,24 +9,12 @@ phases:
       - echo "Install Phase"
   pre_build:
     commands:
-      #for amazon linux:
-      #- yum -y install unzip curl python3-pip
-      #- apk add unzip curl
-      #- curl -O https://bootstrap.pypa.io/get-pip.py \ python3 get-pip.py
-      #- pip3 install awscli
-      #- pip3 install 'ansible==2.7.10'
       - pip3 install ansible
-      #- pip3 install pywinrm
       - pip3 install pypsrp
       - echo "Installing Packer..."
-      #- pwsh
-      #- rm /usr/bin/pwsh
-      #- pwsh
       - cd $CODEBUILD_SRC_DIR
       - cd /usr/local/bin/ && curl -qL -o packer.zip https://releases.hashicorp.com/packer/1.6.0/packer_1.6.0_linux_amd64.zip && unzip packer.zip
       - cd $CODEBUILD_SRC_DIR/imagepipeline
-      #- packer version
-      #- ansible --version
       - echo "Validating packer JSON"
       - packer validate windows_2019.json
       - echo $HOME
@@ -34,7 +22,6 @@ phases:
     commands:
       - echo "Build Phase"
       - cd $CODEBUILD_SRC_DIR/imagepipeline
-      #- PACKER_DEBUG=1
       - packer build -color=false windows_2019.json
 
 artifacts:
