@@ -2,8 +2,8 @@
 
 Set-ExecutionPolicy Unrestricted -Scope LocalMachine -Force -ErrorAction Ignore
 
-Invoke-WebRequest -Uri "https://github.com/PowerShell/PowerShell/releases/download/v7.0.2/PowerShell-7.0.2-win-x64.msi" -OutFile "C:\temp\PowerShell-7.0.2-win-x64.msi"
-msiexec.exe /package C:\temp\PowerShell-7.0.2-win-x64.msi /quiet ADD_EXPLORER_CONTEXT_MENU_OPENPOWERSHELL=1 ENABLE_PSREMOTING=1 REGISTER_MANIFEST=1
+#Invoke-WebRequest -Uri "https://github.com/PowerShell/PowerShell/releases/download/v7.0.2/PowerShell-7.0.2-win-x64.msi" -OutFile "C:\temp\PowerShell-7.0.2-win-x64.msi"
+#msiexec.exe /package C:\temp\PowerShell-7.0.2-win-x64.msi /quiet ADD_EXPLORER_CONTEXT_MENU_OPENPOWERSHELL=1 ENABLE_PSREMOTING=1 REGISTER_MANIFEST=1
 
 #$Process = Start-Process PWSH -ArgumentList @("-Command Enable-PSRemoting -SkipNetworkProfileCheck -Force") -PassThru -WindowStyle Hidden
 
